@@ -1,9 +1,7 @@
 import { ObjectId } from "mongodb";
 
-export default class Post {
-  constructor(
-    public title: string,
-    public content: string,
-    public _id?: ObjectId
-  ) {}
+export default interface Post extends Document {
+  title: string;
+  content: string;
+  _id?: ObjectId;
 }

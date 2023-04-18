@@ -11,7 +11,7 @@ export default function DetailLink(props: { postId: String }) {
         router.push(`/detail/${props.postId}`);
       }}
     >
-      상세
+      📄 상세보기
     </button>
   );
 }

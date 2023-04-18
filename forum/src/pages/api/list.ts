@@ -11,7 +11,6 @@ export default async function handler(
     let collection = db.collection<Post>("post");
     let result = await collection.find().toArray();
 
-    return res.status(200).json(result);
+    res.status(200).json(result);
   }
-  return;
 }

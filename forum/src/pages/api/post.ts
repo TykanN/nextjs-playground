@@ -1,21 +1,21 @@
 import Post from "@/model/post";
 import { connectDB } from "@/util/database";
-import { OptionalId } from "mongodb";
+import { ObjectId, OptionalId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method == "POST") {
-    let db = (await connectDB).db("forum");
-    let collection = db.collection<Post>("post");
+  let db = (await connectDB).db("forum");
+  let collection = db.collection<Post>("post");
 
+  if (req.method == "POST") {
     let title: string = req.body.title;
     let content: string = req.body.content;
 
     if (title == "" || content == "") {
-      return res.status(400).json("다 적으셈");
+      res.status(400).json("다 적으셈");
     }
 
     try {
@@ -24,10 +24,9 @@ export default async function handler(
         content: content,
       } as OptionalId<Post>);
 
-      return res.redirect(302, `/detail/${result.insertedId}`);
+      res.redirect(302, `/detail/${result.insertedId}`);
     } catch (e) {
-      return res.status(500);
+      res.status(500);
     }
   }
-  return;
 }

@@ -1,7 +1,9 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Post from "@/model/post";
 import { connectDB } from "@/util/database";
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,7 +43,22 @@ export default async function handler(
 
   if (req.method == "DELETE") {
     try {
-      await collection.deleteOne({ _id: new ObjectId(postId) });
+      let session = await getServerSession(req, res, authOptions);
+
+      if (session == null) {
+        res.status(400).json("삭제 실패");
+        return;
+      }
+
+      let result = await collection.deleteOne({
+        _id: new ObjectId(postId),
+        author: session?.user?.email,
+      });
+
+      if (result.deletedCount == 0) {
+        res.status(400).json("삭제 실패");
+        return;
+      }
 
       res.status(200).json("삭제 완료");
     } catch (e) {

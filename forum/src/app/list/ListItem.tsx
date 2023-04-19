@@ -31,6 +31,7 @@ export default function ListItem({ posts }: { posts: string }) {
                     return r.json();
                   } else {
                     //서버 에러코드
+                    throw r.json();
                   }
                 })
                 .then((result) => {
@@ -44,6 +45,11 @@ export default function ListItem({ posts }: { posts: string }) {
                   }, 1000);
                 })
                 .catch((error) => {
+                  if (error instanceof Promise) {
+                    error.then((msg) => {
+                      window.alert(msg);
+                    });
+                  }
                   console.log(error);
                 });
             }}

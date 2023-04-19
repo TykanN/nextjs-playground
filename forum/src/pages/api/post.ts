@@ -1,7 +1,9 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Post from "@/model/post";
 import { connectDB } from "@/util/database";
 import { ObjectId, OptionalId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,6 +11,7 @@ export default async function handler(
 ) {
   let db = (await connectDB).db("forum");
   let collection = db.collection<Post>("post");
+  let session = await getServerSession(req, res, authOptions);
 
   if (req.method == "POST") {
     let title: string = req.body.title;
@@ -20,6 +23,7 @@ export default async function handler(
 
     try {
       let result = await collection.insertOne({
+        author: session?.user?.email,
         title: title,
         content: content,
       } as OptionalId<Post>);

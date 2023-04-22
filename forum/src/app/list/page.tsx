@@ -1,9 +1,9 @@
 import Post from "@/model/post";
 import { connectDB } from "@/util/database";
 import Link from "next/link";
-import { json } from "stream/consumers";
-import DetailLink from "./DetailLink";
 import ListItem from "./ListItem";
+
+export const revalidate = 10;
 
 export default async function List() {
   let db = (await connectDB).db("forum");

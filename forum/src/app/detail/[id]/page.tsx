@@ -2,6 +2,7 @@ import Post from "@/model/post";
 import { connectDB } from "@/util/database";
 import { ObjectId } from "mongodb";
 import Link from "next/link";
+import Comment from "@/app/detail/[id]/Comment";
 
 async function PostDetailPage(props: { params: { id: string } }) {
   let db = (await connectDB).db("forum");
@@ -21,6 +22,7 @@ async function PostDetailPage(props: { params: { id: string } }) {
       <h4>상세페이지</h4>
       <h4>{result?.title}</h4>
       <p>{result?.content}</p>
+      <Comment postId={props.params.id} />
     </div>
   );
 }
